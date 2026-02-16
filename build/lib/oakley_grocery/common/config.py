@@ -24,7 +24,7 @@ TELEGRAM_MAX_LENGTH = 4096
 
 TIMEZONE = "Australia/Sydney"
 
-REQUEST_TIMEOUT = 10  # seconds
+REQUEST_TIMEOUT = 20  # seconds
 
 # Woolworths API
 WOOLWORTHS_BASE_URL = "https://www.woolworths.com.au"
