@@ -81,6 +81,27 @@ def format_shopping_list(items: list[dict], show_prices: bool = True) -> str:
     return "\n".join(lines)
 
 
+def format_danmurphys_price(product: dict) -> str:
+    """Format Dan Murphy's multi-tier pricing.
+
+    Shows single price, plus any-six and case prices if different.
+    Example: '$19.99 ea | $17.99 any six | $107.70 case'
+    """
+    parts = []
+    single = product.get("price")
+    six = product.get("six_price")
+    case = product.get("case_price")
+
+    if single is not None:
+        parts.append(f"{format_price(single)} ea")
+    if six is not None and six != single:
+        parts.append(f"{format_price(six)} any six")
+    if case is not None:
+        parts.append(f"{format_price(case)} case")
+
+    return " | ".join(parts) if parts else "N/A"
+
+
 def truncate_for_telegram(text: str, max_length: int = Config.telegram_max_length) -> str:
     if len(text) <= max_length:
         return text

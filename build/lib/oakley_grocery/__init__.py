@@ -1,3 +1,3 @@
-"""Oakley Grocery — smart shopping list manager with Woolworths integration."""
+"""Oakley Grocery — smart shopping list manager with Woolworths & Dan Murphy's integration."""
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"

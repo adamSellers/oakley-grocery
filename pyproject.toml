@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "oakley-grocery"
-version = "1.0.0"
-description = "Smart grocery shopping CLI — Woolworths product search, shopping lists, cart building, preference learning"
+version = "1.1.0"
+description = "Smart grocery shopping CLI — Woolworths & Dan Murphy's product search, shopping lists, cart building, preference learning"
 requires-python = ">=3.8"
 dependencies = [
     "requests>=2.28.0",

@@ -5,6 +5,7 @@ oakley_grocery/__init__.py
 oakley_grocery/auth.py
 oakley_grocery/cart.py
 oakley_grocery/cli.py
+oakley_grocery/danmurphys.py
 oakley_grocery/db.py
 oakley_grocery/lists.py
 oakley_grocery/memory.py
@@ -21,6 +22,7 @@ oakley_grocery/common/cache.py
 oakley_grocery/common/config.py
 oakley_grocery/common/formatting.py
 oakley_grocery/common/rate_limiter.py
+tests/test_danmurphys.py
 tests/test_db.py
 tests/test_formatting.py
 tests/test_lists.py

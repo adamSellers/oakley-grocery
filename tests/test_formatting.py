@@ -112,3 +112,43 @@ def test_format_datetime_aest():
     from oakley_grocery.common.formatting import format_datetime_aest
     result = format_datetime_aest()
     assert "AEST" in result
+
+
+# ─── Dan Murphy's price formatting ──────────────────────────────────────────
+
+
+def test_format_danmurphys_price_all_tiers():
+    from oakley_grocery.common.formatting import format_danmurphys_price
+    product = {"price": 19.99, "six_price": 17.99, "case_price": 107.70}
+    result = format_danmurphys_price(product)
+    assert "$19.99 ea" in result
+    assert "$17.99 any six" in result
+    assert "$107.70 case" in result
+
+
+def test_format_danmurphys_price_single_only():
+    from oakley_grocery.common.formatting import format_danmurphys_price
+    product = {"price": 29.99}
+    result = format_danmurphys_price(product)
+    assert "$29.99 ea" in result
+    assert "any six" not in result
+
+
+def test_format_danmurphys_price_same_single_and_six():
+    from oakley_grocery.common.formatting import format_danmurphys_price
+    product = {"price": 19.99, "six_price": 19.99}
+    result = format_danmurphys_price(product)
+    assert "$19.99 ea" in result
+    assert "any six" not in result
+
+
+def test_format_danmurphys_price_no_prices():
+    from oakley_grocery.common.formatting import format_danmurphys_price
+    product = {}
+    assert format_danmurphys_price(product) == "N/A"
+
+
+def test_format_danmurphys_price_none_values():
+    from oakley_grocery.common.formatting import format_danmurphys_price
+    product = {"price": None, "six_price": None, "case_price": None}
+    assert format_danmurphys_price(product) == "N/A"

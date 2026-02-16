@@ -1,10 +1,11 @@
 # Oakley Grocery
 
-Smart grocery shopping assistant — Woolworths product search, shopping lists with preference learning, cart building, and purchase intelligence.
+Smart grocery shopping assistant — Woolworths & Dan Murphy's product search, shopping lists with preference learning, cart building, and purchase intelligence.
 
 ## What It Does
 
 - Search Woolworths products (prices, specials, cup prices)
+- Search Dan Murphy's products (single/six/case pricing, varietal, region, ABV)
 - Build and manage shopping lists
 - Resolve generic items ("milk") to specific products with preference learning
 - Build Woolworths cart from resolved lists (you tap checkout)
@@ -18,6 +19,7 @@ Smart grocery shopping assistant — Woolworths product search, shopping lists w
 - **Preferences get smarter over time** — after 3-4 shops, "do the usual" builds a fully-resolved cart in seconds
 - **Cart building requires cookies** — captured from a logged-in Woolworths browser session. Expires periodically.
 - Search works without any setup. Cart operations need cookies.
+- **Dan Murphy's is search only** — no cart building or preference learning. Results show multi-tier pricing (single, any-six, case) and alcohol details (varietal, region, ABV).
 
 ## Commands
 
@@ -37,7 +39,7 @@ exec oakley-grocery status
 ### Product Search
 
 ```bash
-# Search for products
+# Search Woolworths products (default)
 exec oakley-grocery search --query "full cream milk"
 
 # Sort by price
@@ -48,6 +50,15 @@ exec oakley-grocery search --query "yoghurt" --specials-only
 
 # More results
 exec oakley-grocery search --query "bread" --limit 20
+
+# Search Dan Murphy's
+exec oakley-grocery search --query "shiraz" --store dan-murphys
+
+# Dan Murphy's sorted by price
+exec oakley-grocery search --query "pinot noir" --store dan-murphys --sort PriceAsc
+
+# Dan Murphy's specials only
+exec oakley-grocery search --query "craft beer" --store dan-murphys --specials-only
 ```
 
 ### Product Resolution & Preferences
@@ -189,7 +200,7 @@ Next time: "Do the usual" → `usual --create-list` → instant resolved list.
 
 ## Error Handling
 
-- If Woolworths search fails, the skill returns stale cached results (up to 24hr)
+- If Woolworths or Dan Murphy's search fails, the skill returns stale cached results (up to 24hr)
 - If cart building fails for individual items, it continues with the rest and reports failures
 - If cookies expire, the skill tells you to update them
 - All network calls have 10s timeouts

@@ -87,6 +87,13 @@ def cmd_status(args):
 # ─── Phase 1: Search ────────────────────────────────────────────────────────
 
 def cmd_search(args):
+    if getattr(args, "store", "woolworths") == "dan-murphys":
+        _cmd_search_danmurphys(args)
+    else:
+        _cmd_search_woolworths(args)
+
+
+def _cmd_search_woolworths(args):
     from oakley_grocery.common import truncate_for_telegram, format_section_header, format_price
     from oakley_grocery import woolworths
 
@@ -135,6 +142,81 @@ def cmd_search(args):
             details += " | UNAVAILABLE"
 
         lines.append(details)
+        lines.append(f"   Code: {p.get('stockcode', 'N/A')}")
+        lines.append("")
+
+    print(truncate_for_telegram("\n".join(lines)))
+
+
+def _cmd_search_danmurphys(args):
+    from oakley_grocery.common import truncate_for_telegram, format_section_header, format_price, format_danmurphys_price
+    from oakley_grocery import danmurphys
+
+    try:
+        products = danmurphys.search_products(
+            query=args.query,
+            page_size=args.limit,
+            sort_by=args.sort or "",
+        )
+    except RuntimeError as e:
+        print(f"Error: {e}", file=sys.stderr)
+        sys.exit(1)
+
+    if args.specials_only:
+        products = [p for p in products if p.get("on_special")]
+
+    if not products:
+        print("No products found.")
+        return
+
+    lines = [format_section_header(f"Dan Murphy's: '{args.query}' ({len(products)} results)"), ""]
+
+    for i, p in enumerate(products, 1):
+        name = p.get("name", "Unknown")
+        brand = p.get("brand", "")
+        volume = p.get("volume", "")
+
+        line = f"{i}. {name}"
+        if brand:
+            line += f" ({brand})"
+        lines.append(line)
+
+        # Multi-tier pricing
+        pricing = format_danmurphys_price(p)
+        details = f"   {pricing}"
+
+        if volume:
+            details += f" | {volume}"
+
+        if p.get("on_special"):
+            was = format_price(p.get("was_price"))
+            saved = p.get("amount_saved")
+            special_text = " | SPECIAL"
+            if was:
+                special_text += f" (was {was})"
+            if saved and saved > 0:
+                special_text += f" save ${saved:.2f}"
+            details += special_text
+
+        if p.get("is_member_offer"):
+            details += " | MEMBER OFFER"
+
+        lines.append(details)
+
+        # Alcohol-specific details
+        extras = []
+        if p.get("varietal"):
+            extras.append(p["varietal"])
+        if p.get("region"):
+            extras.append(p["region"])
+        if p.get("alcohol_pct"):
+            extras.append(f"{p['alcohol_pct']} ABV")
+        if p.get("rating"):
+            extras.append(f"Rating: {p['rating']}")
+
+        if extras:
+            lines.append(f"   {' | '.join(extras)}")
+
         lines.append(f"   Code: {p.get('stockcode', 'N/A')}")
         lines.append("")
 
@@ -706,9 +788,12 @@ def main():
     subparsers.add_parser("status", help="Show version, API status, DB stats")
 
     # search
-    search_parser = subparsers.add_parser("search", help="Search Woolworths products")
+    search_parser = subparsers.add_parser("search", help="Search products (Woolworths or Dan Murphy's)")
     search_parser.add_argument("--query", required=True, help="Search text")
-    search_parser.add_argument("--sort", default=None, help="Sort: TraderRelevance|PriceAsc|PriceDesc")
+    search_parser.add_argument("--store", default="woolworths",
+                              choices=["woolworths", "dan-murphys"],
+                              help="Store to search (default: woolworths)")
+    search_parser.add_argument("--sort", default=None, help="Sort: TraderRelevance|PriceAsc|PriceDesc (Woolworths) or Relevance|PriceAsc|PriceDesc (Dan Murphy's)")
     search_parser.add_argument("--specials-only", action="store_true", help="Only show items on special")
     search_parser.add_argument("--limit", type=int, default=10, help="Max results (default: 10)")
 

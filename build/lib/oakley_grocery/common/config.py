@@ -12,6 +12,7 @@ CACHE_TTL = {
     "product": 86400,      # 24 hours — product details
     "specials": 14400,     # 4 hours — specials
     "trolley": 300,        # 5 minutes — trolley status
+    "danmurphys_search": 3600,  # 1 hour — Dan Murphy's search
 }
 
 STALE_CACHE_MAX_AGE = 86400  # 24 hours fallback
@@ -19,6 +20,10 @@ STALE_CACHE_MAX_AGE = 86400  # 24 hours fallback
 # Rate limits — Woolworths web API
 WOOLWORTHS_RATE_LIMIT_CALLS = 5
 WOOLWORTHS_RATE_LIMIT_PERIOD = 1  # 5 req/sec
+
+# Rate limits — Dan Murphy's web API (Cloudflare, conservative)
+DANMURPHYS_RATE_LIMIT_CALLS = 3
+DANMURPHYS_RATE_LIMIT_PERIOD = 1  # 3 req/sec
 
 TELEGRAM_MAX_LENGTH = 4096
 
@@ -33,9 +38,16 @@ WOOLWORTHS_PRODUCT_URL = f"{WOOLWORTHS_BASE_URL}/apis/ui/product/detail"
 WOOLWORTHS_TROLLEY_URL = f"{WOOLWORTHS_BASE_URL}/api/v3/ui/trolley/update"
 WOOLWORTHS_TROLLEY_LIST_URL = f"{WOOLWORTHS_BASE_URL}/api/v3/ui/trolley/items"
 
+# Dan Murphy's API
+DANMURPHYS_BASE_URL = "https://api.danmurphys.com.au"
+DANMURPHYS_SEARCH_URL = f"{DANMURPHYS_BASE_URL}/apis/ui/Search/products"
+DANMURPHYS_HOMEPAGE_URL = "https://www.danmurphys.com.au"
+
 # Search defaults
 DEFAULT_PAGE_SIZE = 10
 DEFAULT_SORT = "TraderRelevance"
+DANMURPHYS_DEFAULT_PAGE_SIZE = 10
+DANMURPHYS_DEFAULT_SORT = "Relevance"
 
 # Resolver thresholds
 AUTO_RESOLVE_MIN_SCORE = 0.4
@@ -70,6 +82,14 @@ class Config:
     woolworths_product_url = WOOLWORTHS_PRODUCT_URL
     woolworths_trolley_url = WOOLWORTHS_TROLLEY_URL
     woolworths_trolley_list_url = WOOLWORTHS_TROLLEY_LIST_URL
+
+    danmurphys_base_url = DANMURPHYS_BASE_URL
+    danmurphys_search_url = DANMURPHYS_SEARCH_URL
+    danmurphys_homepage_url = DANMURPHYS_HOMEPAGE_URL
+    danmurphys_rate_limit_calls = DANMURPHYS_RATE_LIMIT_CALLS
+    danmurphys_rate_limit_period = DANMURPHYS_RATE_LIMIT_PERIOD
+    danmurphys_default_page_size = DANMURPHYS_DEFAULT_PAGE_SIZE
+    danmurphys_default_sort = DANMURPHYS_DEFAULT_SORT
 
     default_page_size = DEFAULT_PAGE_SIZE
     default_sort = DEFAULT_SORT
