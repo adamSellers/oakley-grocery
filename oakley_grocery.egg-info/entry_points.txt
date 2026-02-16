@@ -1,0 +1,2 @@
+[console_scripts]
+oakley-grocery = oakley_grocery.cli:main

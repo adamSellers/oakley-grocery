@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: oakley-grocery
+Version: 1.0.0
+Summary: Smart grocery shopping CLI — Woolworths product search, shopping lists, cart building, preference learning
+Requires-Python: >=3.8
+Requires-Dist: requests>=2.28.0
+Requires-Dist: pytz>=2023.3
